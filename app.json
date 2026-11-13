@@ -1,0 +1,6 @@
+{
+ "pages": ["pages/home/index","pages/activities/index","pages/assets/index","pages/profile/index","pages/login/index","pages/shop/index","pages/activity/index","pages/claim/index","pages/result/index","pages/h5/index","pages/onboarding/index","pages/agent-apply/index","pages/console/index","pages/activity-edit/index","pages/records/index","pages/wallet/index","pages/purchase/index","pages/refunds/index","pages/redeem/index","pages/gifts/index","pages/pricebook/index","pages/merchants/index","pages/payables/index","pages/invite/index","pages/profile-edit/index"],
+ "window": {"navigationBarTitleText":"丰嘉盈","navigationBarBackgroundColor":"#f8faf8","navigationBarTextStyle":"black","backgroundColor":"#f6f7f9","backgroundTextStyle":"dark"},
+ "tabBar": {"custom":true,"color":"#929b97","selectedColor":"#c34e48","backgroundColor":"#ffffff","list":[{"pagePath":"pages/home/index","text":"首页"},{"pagePath":"pages/activities/index","text":"发现"},{"pagePath":"pages/assets/index","text":"权益"},{"pagePath":"pages/profile/index","text":"我的"}]},
+ "style":"v2", "sitemapLocation":"sitemap.json", "lazyCodeLoading":"requiredComponents"
+}

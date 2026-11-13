@@ -1,0 +1,1 @@
+{"desc":"Mock开发项目，不索引业务页面","rules":[{"action":"disallow","page":"*"}]}

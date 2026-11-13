@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "丰嘉盈",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "marketing-game": "/components/marketing-game/index"
+  }
+}

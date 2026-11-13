@@ -1,0 +1,1 @@
+Component({data:{selected:0,role:'customer',items:[{path:'/pages/home/index',text:'首页',icon:'⌂'},{path:'/pages/activities/index',text:'发现',icon:'✧'},{path:'/pages/assets/index',text:'权益',icon:'▤'},{path:'/pages/profile/index',text:'我的',icon:'♙'}]},methods:{switchTab(e){wx.switchTab({url:this.data.items[e.currentTarget.dataset.index].path})}}})
