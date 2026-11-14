@@ -1,5 +1,5 @@
 {
-  "appid": "wx08a936770c8125e8",
+  "appid": "wx741af8892e79d3a7",
   "projectname": "丰嘉盈营销权益平台",
   "compileType": "miniprogram",
   "miniprogramRoot": "./",
@@ -25,7 +25,9 @@
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    }
+    },
+    "swc": false,
+    "disableSWC": true
   },
   "packOptions": {
     "ignore": [

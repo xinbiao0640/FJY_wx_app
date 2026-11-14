@@ -1,3 +1,5 @@
+> 当前默认使用后端 HTTP 接口，详见 [后端联调说明](BACKEND.md)。以下本地演示说明仅适用于 `services/config.js` 的 `mode: 'mock'` 模式。
+
 # 丰嘉盈 · 原生微信小程序
 
 原生 WXML / WXSS / JavaScript，无 uni-app，无前端框架，无后端依赖。依据 `docs/丰嘉盈_技术设计_v1.0` 实现，角色色为顾客红、商户蓝、代理紫。

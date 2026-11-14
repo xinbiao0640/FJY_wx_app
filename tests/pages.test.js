@@ -1,3 +1,4 @@
+require('../services/config').mode='mock'
 const {test}=require('node:test')
 const assert=require('node:assert/strict')
 const app={globalData:{role:'customer'}}
