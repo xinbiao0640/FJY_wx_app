@@ -10,7 +10,21 @@ module.exports=function(name){return {
  onHide(){this.visible=false;this.stopPolling();clearInterval(this.smsTimer);this.smsTimer=null;if(this.codeTimer)clearInterval(this.codeTimer);this.setData({redeemCode:'',countdown:0})},
  onUnload(){this.visible=false;this.stopPolling();clearInterval(this.smsTimer);clearInterval(this.codeTimer)},
  async onPullDownRefresh(){try{if(api.sync)await this.loadRemote();else this.refresh()}finally{wx.stopPullDownRefresh()}},
- async loadRemote(){this.setData({loading:true,loadError:''});try{await api.sync();this.refresh();if(name==='result'&&this.visible)this.startPolling();if(name==='invite'&&!this.data.denied){const r=await api.request('invite',{});this.setData({inviteCode:r.data.code})}}catch(e){this.setData({denied:e.message,loadError:e.message});showError(e)}finally{this.setData({loading:false})}},
+ async loadRemote(){
+  if(this.data.loading)return
+  this.refresh()
+  this.setData({loading:true,loadError:''})
+  try{
+   await api.sync();this.refresh()
+   if(name==='result'&&this.visible)this.startPolling()
+   if(name==='invite'&&!this.data.denied){const r=await api.request('invite',{});this.setData({inviteCode:r.data.code})}
+  }catch(e){
+   // 同步失败可能清除了过期会话；重新计算权限，网络错误只影响数据提示。
+   this.refresh()
+   this.setData({loadError:e.message||'数据暂时无法加载，请稍后重试'})
+  }finally{this.setData({loading:false})}
+ },
+ retryLoad(){if(api.sync)return this.loadRemote();this.refresh()},
  refresh(){
   const db=api.read(),role=getApp().globalData.role||'customer';const a=db.activities.find(x=>name==='shop'?x.merchantId===this.options.id:x.id===this.options.id)||db.activities[0]||{};const ownActivities=db.activities.filter(a=>db.merchant&&a.merchantId===db.merchant.id);const roleOrders=db.orders.filter(x=>x.role===role);const rows=this.options.type==='orders'?roleOrders:this.options.type==='redemptions'?db.redemptions:this.options.type==='refunds'?db.refunds.filter(x=>x.role===role):this.options.type==='activities'?ownActivities:db.claims.filter(c=>role!=='merchant'||ownActivities.some(a=>a.id===c.activityId));
   const viewClaims=db.claims.map(x=>Object.assign({},x,{statusText:api.labels[x.status],dateText:new Date(x.date).toLocaleDateString('zh-CN'),canSelect:x.status==='PENDING_SELECTION'}));

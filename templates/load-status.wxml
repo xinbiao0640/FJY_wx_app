@@ -1,0 +1,4 @@
+<view wx:if="{{loadError}}" class="load-status" role="alert">
+  <view class="load-status-message">数据暂时无法更新，您可以继续浏览页面。<view>{{loadError}}</view></view>
+  <button class="load-status-retry" bindtap="retryLoad" loading="{{loading}}" disabled="{{loading}}">重试</button>
+</view>
