@@ -4,3 +4,5 @@ page{background:#f6f7f9;color:#354239;font-family:-apple-system,BlinkMacSystemFo
 .body-text,.muted,.subtitle,.field-label,.menu-row,.detail-line{color:#839180}.field-tip,.mock-note,.empty,.empty .desc,.option-desc,.result-desc,.profile-head .phone,.record .id{color:#99a394}.detail-line text:last-child{color:#576852}.metric .metric-label{color:#94a18d}.filter-chip{color:#87977f}.coupon-info .expiry{color:#9ca592}.product-quantity{color:#53694b}.agreement{color:#8b9a82}.footnote{color:#a5afa1}
 
 .qr-image{display:block;width:430rpx;height:430rpx;max-width:100%;margin:20rpx auto;background:#fff}.redeem-preview{margin-top:25rpx;padding:25rpx;background:var(--soft);border-radius:16rpx}.scan-entry{margin-bottom:25rpx}.code-dialog{max-height:90vh;overflow-y:auto}
+
+.subject-review .detail-line text:first-child{flex-shrink:0}.subject-review .detail-line text:last-child{min-width:0;word-break:break-all}.subject-review .result-desc{word-break:break-all}

@@ -1,0 +1,16 @@
+<template name="subject-review">
+  <view class="card subject-review" style="margin-top:30rpx">
+    <view class="result-title">{{subject.status==='PENDING'?'申请审核中':subject.status==='REJECTED'?'申请未通过':subject.status==='APPROVED'?'审核已通过':'当前申请状态'}}</view>
+    <view class="result-desc">{{subject.name}}</view>
+    <view class="note">{{subject.status==='PENDING'?'申请已提交，请等待平台审核。审核通过后才可进入经营工作台。':subject.status==='REJECTED'?'请查看审核原因，并联系平台核实申请资料。':subject.status==='APPROVED'?'经营身份已开通，可进入工作台。':'当前经营身份暂不可用，请联系平台。'}}</view>
+    <view class="detail-line"><text>申请时间（上海）</text><text>{{subject.appliedAtText}}</text></view>
+    <block wx:if="{{subject.reviewedAt}}">
+      <view class="detail-line"><text>审核结果</text><text>{{subject.reviewDecision==='APPROVE'?'通过':'驳回'}}</text></view>
+      <view class="detail-line"><text>审核人</text><text>{{subject.reviewerText}}</text></view>
+      <view class="detail-line"><text>审核时间（上海）</text><text>{{subject.reviewedAtText}}</text></view>
+      <view class="detail-line"><text>审核原因</text><text>{{subject.reviewReason||'—'}}</text></view>
+    </block>
+    <button wx:if="{{subject.status==='APPROVED'}}" class="primary" bindtap="enterConsole">进入经营工作台</button>
+    <button class="secondary" bindtap="retryLoad" loading="{{loading}}" disabled="{{loading||busy}}">刷新审核状态</button>
+  </view>
+</template>

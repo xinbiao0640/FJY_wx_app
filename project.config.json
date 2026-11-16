@@ -1,5 +1,5 @@
 {
-  "appid": "wx741af8892e79d3a7",
+  "appid": "wx08a936770c8125e8",
   "projectname": "丰嘉盈营销权益平台",
   "compileType": "miniprogram",
   "miniprogramRoot": "./",
@@ -43,5 +43,6 @@
     "include": []
   },
   "simulatorPluginLibVersion": {},
-  "editorSetting": {}
+  "editorSetting": {},
+  "isGameTourist": false
 }

@@ -1,5 +1,5 @@
 const SESSION_KEY = 'fjy-http-session-v1'
-const labels = {RUNNING:'进行中',DRAFT:'草稿',PAUSED:'已暂停',ENDED:'已结束',PENDING_SELECTION:'待手选',PROCESSING:'出票中',SUCCESS:'已出票',PARTIAL:'部分成功',FAILED:'出票失败',RELEASED:'已释放',NO_WIN:'未中奖',AVAILABLE:'待使用',REDEEMED:'已核销',EXPIRED:'已过期',CREATED:'待领取',CLAIMED:'已领取',REVOKED:'已撤销',PAID:'已支付',APPLIED:'待审核',PENDING:'审核中',APPROVED:'已通过',UNPAID:'待结算',HELD:'暂挂',SETTLED:'已结算'}
+const labels = {RUNNING:'进行中',DRAFT:'草稿',PAUSED:'已暂停',ENDED:'已结束',PENDING_SELECTION:'待手选',PROCESSING:'出票中',SUCCESS:'已出票',PARTIAL:'部分成功',FAILED:'出票失败',RELEASED:'已释放',NO_WIN:'未中奖',AVAILABLE:'待使用',REDEEMED:'已核销',EXPIRED:'已过期',CREATED:'待领取',CLAIMED:'已领取',REVOKED:'已撤销',PAID:'已支付',APPLIED:'待审核',PENDING:'审核中',APPROVED:'已通过',REJECTED:'已驳回',UNPAID:'待结算',HELD:'暂挂',SETTLED:'已结算'}
 function empty() { return {user:null,merchant:null,agent:null,activities:[],wallets:{merchant:{availableBets:0,frozenBets:0,consumedBets:0,refundedBets:0},agent:{availableBets:0,frozenBets:0,consumedBets:0,refundedBets:0}},couponTemplates:[],claims:[],coupons:[],ownershipRequests:[],redemptions:[],gifts:[],orders:[],refunds:[],ledgers:[],payables:[],merchants:[],products:[],pricebook:{price:'',minPrice:'',version:0}} }
 function createClient({wx, config, role = () => 'customer'}) {
   let session = wx.getStorageSync(SESSION_KEY) || null, cache = empty(), refreshing, syncing, epoch = 0
