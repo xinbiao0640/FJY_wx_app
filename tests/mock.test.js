@@ -5,6 +5,19 @@ function login(phone='13800138000'){api.transact('login',{phone,smsCode:'123456'
 function merchant(){login();api.transact('onboarding',{name:'测试商户',contact:'店长',phone:'13800138000'})}
 function agent(){login();api.transact('agentApply',{name:'测试代理',region:'杭州',phone:'13800138000'});api.transact('demoApprove',{})}
 beforeEach(()=>api.reset())
+
+test('定向发券跨账号到账，重复请求不重复扣库存，核销预览不消耗券',()=>{
+  login('13900139000');merchant()
+  const template=api.transact('couponCreate',{name:'新客券',stock:2})
+  const payload={templateId:template.id,phone:'13900139000',quantity:1}
+  api.transact('couponIssue',payload,'stable-coupon-issue');api.transact('couponIssue',payload,'stable-coupon-issue')
+  assert.equal(api.read().couponTemplates[0].stock,1)
+  assert.throws(()=>api.transact('couponIssue',{...payload,phone:'13799999999'}),{code:'CUSTOMER_NOT_REGISTERED'})
+  login('13900139000');const coupon=api.read().coupons.find(c=>c.name==='新客券');assert.ok(coupon)
+  const code=api.transact('redeemCode',{id:coupon.id}).code;login()
+  assert.equal(api.transact('redeemPreview',{code}).id,coupon.id);assert.equal(api.read().redemptions.length,0)
+  api.transact('redeem',{code});assert.equal(api.read().redemptions.length,1)
+})
 test('购买幂等、不可重复入账及不同payload冲突',()=>{merchant();const before=api.read().wallets.merchant.availableBets;const p={role:'merchant',productId:'P100'};const a=api.transact('purchase',p,'purchase-1');const b=api.transact('purchase',p,'purchase-1');assert.equal(a.id,b.id);assert.equal(api.read().wallets.merchant.availableBets,before+100);assert.throws(()=>api.transact('purchase',{role:'merchant',productId:'P500'},'purchase-1'),{code:'IDEMPOTENCY_CONFLICT'})})
 test('中奖只预占，模拟状态查询才消费，限次准确',()=>{login();const before=api.read().wallets.merchant.availableBets;const c=api.transact('claim',{activityId:'3004',receiveMode:'AUTO'},'claim-1');assert.equal(c.status,'PROCESSING');assert.equal(api.read().wallets.merchant.availableBets,before-2);const frozen=api.read().wallets.merchant.frozenBets;api.transact('pollClaim',{id:c.id});assert.equal(api.read().claims[0].status,'PROCESSING');api.transact('pollClaim',{id:c.id});assert.equal(api.read().claims[0].status,'SUCCESS');assert.equal(api.read().wallets.merchant.frozenBets,frozen-2);api.transact('pollClaim',{id:c.id});assert.equal(api.read().wallets.merchant.frozenBets,frozen-2);assert.throws(()=>api.transact('claim',{activityId:'3004',receiveMode:'AUTO'}),{code:'PARTICIPATION_LIMIT'})})
 test('未中奖不伪造出票单，消耗参与次数',()=>{login();api.read().activities[0].winProbabilityPpm=0;const c=api.transact('claim',{activityId:'3001',receiveMode:'AUTO'});assert.equal(c.outcome,'NO_WIN');assert.deepEqual(c.tickets,[]);assert.equal(c.claimId,undefined);assert.equal(api.read().claims.length,0);assert.equal(api.read().attempts['3001'],1)})

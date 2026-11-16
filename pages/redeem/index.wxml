@@ -1,1 +1,37 @@
-<view class="page {{role}} "><include src="../../templates/load-status.wxml"/><view wx:if="{{denied}}" class="denied">{{denied}}<button class="primary" bindtap="home">返回首页</button></view><block wx:else><view class="heading-title">每一份好礼，安心核销</view><view class="subtitle">仅核销当前商户的有效券，一券一次。</view><view class="card" style="margin-top:30rpx"><view class="card-title">核销顾客卡券</view><button class="secondary" bindtap="scan">⌗ 扫描核销码</button><view class="field" style="margin-top:25rpx"><text class="field-label">或粘贴动态核销口令</text><input value="{{form.code}}" bindinput="input" data-field="code" placeholder="有效期60秒的一次性口令"/></view><button class="primary" bindtap="redeem" loading="{{busy}}" disabled="{{busy}}">确认核销</button></view><view class="card"><view class="card-title">创建券模板</view><view class="field"><text class="field-label">券名称</text><input value="{{form.name}}" bindinput="input" data-field="name" placeholder="如：咖啡满30减10元"/></view><view class="field"><text class="field-label">库存数量</text><input value="{{form.stock}}" type="number" bindinput="input" data-field="stock"/></view><button class="secondary" bindtap="createCoupon" disabled="{{busy}}">创建模板</button></view><view class="card" wx:for="{{couponTemplates}}" wx:key="id"><view class="row"><text>{{item.name}}</text><text class="status">库存 {{item.stock}}</text></view></view><view class="return-home" bindtap="open" data-path="records" data-query="?type=redemptions">查看核销记录 ›</view></block></view>
+<view class="page {{role}}">
+  <include src="../../templates/load-status.wxml"/>
+  <view wx:if="{{denied}}" class="denied">{{denied}}<button class="primary" bindtap="home">返回首页</button></view>
+  <block wx:else>
+    <view class="heading-title">扫码核销</view>
+    <view class="subtitle">核销本店有效优惠券，扫码后核对信息再确认。</view>
+    <view class="card">
+      <button class="primary" bindtap="scan" disabled="{{busy}}">打开相机扫码</button>
+      <view class="field"><text class="field-label">或输入顾客出示的动态核销码</text><input value="{{form.code}}" bindinput="input" data-field="code" maxlength="140" placeholder="输入或粘贴动态码"/></view>
+      <button class="secondary" bindtap="previewRedeem" loading="{{busy}}" disabled="{{busy}}">查询优惠券</button>
+      <view wx:if="{{redeemPreview}}" class="redeem-preview">
+        <view class="card-title">{{redeemPreview.name}}</view>
+        <view class="muted">券编号：{{redeemPreview.id}}</view>
+        <view class="muted">有效期至：{{redeemPreview.expiry}}</view>
+        <view class="field-tip">请核对优惠内容。动态码过期时，请顾客刷新后重扫。</view>
+        <button class="primary" bindtap="redeem" loading="{{busy}}" disabled="{{busy}}">确认核销</button>
+      </view>
+    </view>
+    <button class="secondary" bindtap="open" data-path="records" data-query="?type=redemptions">查看核销记录</button>
+    <view class="card">
+      <view class="card-title">给用户发券</view>
+      <view class="field-tip">仅向已注册手机号发放，优惠券直接进入用户“我的卡券”。</view>
+      <picker range="{{couponTemplates}}" range-key="name" value="{{templateIndex||0}}" bindchange="templateChange"><view class="field">{{couponTemplates.length?couponTemplates[templateIndex||0].name:'请先创建券模板'}} ▾</view></picker>
+      <view class="field"><text class="field-label">接收用户手机号</text><input type="number" maxlength="11" value="{{form.issuePhone}}" bindinput="input" data-field="issuePhone" placeholder="已注册的11位手机号"/></view>
+      <view class="field"><text class="field-label">发放张数（1～100）</text><input type="number" value="{{form.issueQuantity||1}}" bindinput="input" data-field="issueQuantity"/></view>
+      <button class="primary" bindtap="issueCoupon" disabled="{{busy||!couponTemplates.length}}">确认发券</button>
+    </view>
+    <view class="card">
+      <view class="card-title">创建券模板</view>
+      <view class="field"><text class="field-label">券名称与优惠内容</text><input value="{{form.name}}" bindinput="input" data-field="name" placeholder="如：咖啡满30减10元"/></view>
+      <view class="field"><text class="field-label">库存数量</text><input value="{{form.stock}}" type="number" bindinput="input" data-field="stock"/></view>
+      <view class="field-tip">沿用现有规则：新模板有效期为创建后一年。</view>
+      <button class="secondary" bindtap="createCoupon" disabled="{{busy}}">创建模板</button>
+    </view>
+    <view class="card" wx:for="{{couponTemplates}}" wx:key="id"><view class="row"><text>{{item.name}}</text><text class="status">可发 {{item.stock}} 张</text></view></view>
+  </block>
+</view>

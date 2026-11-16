@@ -59,7 +59,7 @@ function createClient({wx, config, role = () => 'customer'}) {
     try {return await pending} finally {if(syncing===pending)syncing=null}
   }
   function headers(action,payload) {
-    const merchant=['activitySave','activityAction','redeem','couponCreate','giftCreate','giftRevoke']
+    const merchant=['activitySave','activityAction','activityCode','redeem','redeemPreview','couponCreate','couponIssue','giftCreate','giftRevoke']
     const agent=['ownershipRequest','pricebook','invite']
     const business=merchant.includes(action)?'MERCHANT':agent.includes(action)?'AGENT':(['purchase','refund'].includes(action)?String(payload.role).toUpperCase():null)
     if(!business)return {}
@@ -85,6 +85,8 @@ function createClient({wx, config, role = () => 'customer'}) {
   }
   async function logout() {try {if(session)await http('/api/auth/logout','POST',{})} finally {clear()} }
   return {labels,key,read:()=>cache,sync,request,logout,reset:logout,
+    activity:id=>http('/api/miniapp/activities/'+encodeURIComponent(id)),
+    activityCode:id=>http('/api/miniapp/activities/'+encodeURIComponent(id)+'/code','GET',undefined,headers('activityCode',{})),
     sendSms:phone=>http('/api/auth/sms-codes','POST',{phone,purpose:'LOGIN'}),
     maskPhone:phone=>phone?phone.slice(0,3)+'****'+phone.slice(-4):''}
 }

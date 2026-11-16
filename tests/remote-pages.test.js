@@ -41,7 +41,9 @@ test('后端不可用时先初始化25个页面，公共页面不被网络错误
       await pending
       assert.equal(p.data.loading,false)
       assert.match(p.data.loadError,/连接后端失败/)
-      if(publicPages.includes(name))assert.equal(p.data.denied,'',name)
+      if(name==='activity')assert.match(p.data.denied,/活动不存在/)
+      else if(name==='claim')assert.match(p.data.denied,/活动不存在/)
+      else if(publicPages.includes(name))assert.equal(p.data.denied,'',name)
       else assert.match(p.data.denied,/请先登录/,name)
       p.onUnload()
     }

@@ -28,6 +28,17 @@ test('经营操作带服务端 Membership 和稳定幂等键',async()=>{
   assert.equal(calls[0].data.payload.productId,'950100');assert.equal(result.data.id,'order1')
   await assert.rejects(client.request('purchase',{role:'agent',productId:'950100'}),{code:'PERMISSION_DENIED'})
 })
+
+test('发券、核销预览和活动码均携带商户 Membership，活动详情公开可读',async()=>{
+  const {client,calls}=setup(o=>envelope(o.url.endsWith('/snapshot')?snapshot():{id:'123'}))
+  await client.request('couponIssue',{templateId:'10',phone:'13800000001',quantity:1},'coupon-issue-key')
+  await client.request('redeemPreview',{code:'12345678'},'coupon-preview-key')
+  await client.activityCode('123')
+  for(const call of calls.filter(o=>o.url.includes('/actions/')||o.url.endsWith('/code')))assert.equal(call.header['X-Membership-Id'],'m-1')
+  const publicClient=setup(()=>envelope({id:'123'}),null)
+  assert.equal((await publicClient.client.activity('123')).data.id,'123')
+  assert.equal(publicClient.calls[0].header.Authorization,undefined)
+})
 test('并发401只轮换一次令牌，重试保留幂等键',async()=>{
   let releaseRefresh,oldRequests=0
   const gate=new Promise(resolve=>releaseRefresh=resolve)
